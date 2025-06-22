@@ -1,6 +1,7 @@
 import express from "express";
 import dbConnection from "./db";
-import cors from "cors"
+import cors from "cors";
+import 'dotenv/config';
 import errorMiddleware from "./middleware/errorMiddleware";
 import { router } from "./routes";
 

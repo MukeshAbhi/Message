@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import z from "zod";
-import { compare, hash } from "bcrypt";
+import { compare } from "bcrypt";
 import {sign} from "jsonwebtoken";
 import { CustomError } from "../types";
+import Users from "../db/models/userModel";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const loginSchema = z.object({
