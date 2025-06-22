@@ -2,6 +2,7 @@ import express from "express";
 import dbConnection from "./db";
 import cors from "cors"
 import errorMiddleware from "./middleware/errorMiddleware";
+import { router } from "./routes";
 
 const app = express();
 
