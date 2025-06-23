@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Message from "../db/models/messageModel";
+import cloudinary from "../lib/cloudinary";
 
 export const getMessages = async ( req: Request, res: Response, next: NextFunction) => {
     try{
@@ -26,8 +27,32 @@ export const sendMessage = async ( req: Request, res: Response, next: NextFuncti
 
     try {
         const { text, image } = req.body;
+        const { id: userToId } = req.params;
+        const senderId = req.body.userId;
 
-    } catch (error) {
-        
+        let imageUrl = "";
+
+        if (image) {
+            // upload image to cloudinary
+            const uploadResponse = await cloudinary.uploader.upload(image);
+            imageUrl = uploadResponse.url; 
+        }
+
+        const newMessage = new Message({
+            senderId,
+            receiverId: userToId,
+            text,
+            image: imageUrl
+        });
+
+        await newMessage.save();
+
+        // todo: realtime functionality 
+
+        res.status(201).json(newMessage);
+
+    }  catch(error) {
+        console.log("Error in sendMessgaes function: ", error);
+        res.status(500).json({ "message": "Internal Server Error"});
     }
 }
