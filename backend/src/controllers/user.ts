@@ -5,7 +5,7 @@ export const getUserFriends = async(req: Request, res: Response, next: NextFunct
     
     try {
         //from Middleware 
-        const { userId } = req.body.user;
+        const { userId } = req.body.userId;
 
         const user = await Users.findById(userId).populate("friends");
 

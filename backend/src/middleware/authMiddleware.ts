@@ -31,7 +31,7 @@ export const authMiddleware = (req : Request, res: Response, next: NextFunction)
 
     try {
         const userToken = verify(token, JWT_SECRET) as {userId : string};
-        req.body.user = {
+        req.body.userId = {
             userId: userToken.userId
         };
         
