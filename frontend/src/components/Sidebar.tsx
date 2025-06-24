@@ -10,7 +10,6 @@ const Sidebar = () => {
     getUsers,
     users,
     selectedUser,
-    setSelectedUser,
     isUsersLoading,
   } = useMessage();
 
@@ -18,11 +17,16 @@ const Sidebar = () => {
   const usersData = useAtomValue(users);
   const selected = useAtomValue(selectedUser);
   const loading = useAtomValue(isUsersLoading);
-  const setSelected = useSetAtom(setSelectedUser);
+  const setSelected = useSetAtom(selectedUser);
 
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  useEffect(() => {
+    console.log("Users data:", usersData);
+    console.log("Selected user:", selected);
+  }, [usersData, selected]);
 
   if (loading) return <SidebarSkeleton />;
 
@@ -39,8 +43,15 @@ const Sidebar = () => {
         {usersData?.length > 0 ? (
           usersData.map((user) => (
             <button
+              type="button"
               key={user._id}
-              onClick={() => setSelected(user)}
+              onClick={() => {
+                console.log("Selecting user:", user);
+                console.log("Current selected:", selected);
+                console.log("About to call setSelected");
+                setSelected(user);
+                console.log("setSelected called");
+              }}
               className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
                 selected?._id === user._id
                   ? "bg-base-300 ring-1 ring-base-300"

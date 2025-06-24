@@ -4,8 +4,8 @@ import Users from "../db/models/userModel"
 export const getUserFriends = async(req: Request, res: Response, next: NextFunction) => {
     
     try {
-        //from Middleware 
-        const { userId } = req.body.userId;
+        //from Middleware
+        const userId = req.body.userId;
 
         const user = await Users.findById(userId).populate("friends");
 
@@ -21,6 +21,7 @@ export const getUserFriends = async(req: Request, res: Response, next: NextFunct
 
         res.status(200).json({
             success: true,
+            data: user.friends,
             user: user
         })
 

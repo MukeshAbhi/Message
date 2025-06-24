@@ -31,11 +31,14 @@ export const authMiddleware = (req : Request, res: Response, next: NextFunction)
 
     try {
         const userToken = verify(token, JWT_SECRET) as {userId : string};
-        req.body.userId = {
-            userId: userToken.userId
-        };
-        
-        console.log(userToken);
+
+        // Ensure req.body exists before setting properties
+        if (!req.body) {
+            req.body = {};
+        }
+        req.body.userId = userToken.userId;
+
+        console.log("userToken : ", userToken);
         next();
     } catch (error) {
         console.log(error);

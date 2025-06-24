@@ -6,11 +6,10 @@ import { useMessage } from "../customHooks/useMessage";
 const ChatHeader = () => {
   const {
     selectedUser,
-    setSelectedUser,
   } = useMessage();
 
   const selecteduser = useAtomValue(selectedUser);
-  const setSelecteduser = useSetAtom(setSelectedUser);
+  const setSelecteduser = useSetAtom(selectedUser);
 
   if (!selecteduser) return null;
 
@@ -36,6 +35,7 @@ const ChatHeader = () => {
 
         {/* Close button */}
         <button
+          type="button"
           onClick={() => setSelecteduser(null)}
           aria-label="Close chat"
           className="p-1 rounded hover:bg-base-200 transition"

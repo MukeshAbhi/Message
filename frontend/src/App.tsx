@@ -3,6 +3,10 @@ import { useAtomValue } from 'jotai'
 import './App.css'
 import { userAtom } from './store/userAtom'
 import Login from './pages/Login'
+import Home from './pages/Home'
+import { Toaster } from 'react-hot-toast'
+
+
 
 //Function to check authentication 
 const Layout = () => {
@@ -23,14 +27,16 @@ function App() {
 
   return (
     <BrowserRouter>
+      
       <Routes>
         {/* Authenticated Routes */}
         <Route element={<Layout />}>
-          <Route path= '/' />
+          <Route path= '/' element={<Home />}/>
         </Route>
         {/* Non Authenticated Routes */}
         <Route path='/login' element={<Login />} />
       </Routes>
+      <Toaster />
     </BrowserRouter>
   )
 }

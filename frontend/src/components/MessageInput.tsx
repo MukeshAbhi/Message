@@ -1,13 +1,16 @@
-import { useRef, useState, ChangeEvent, FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
-import useMessage from "../customHooks/useMessage";
+import {useMessage }from "../customHooks/useMessage";
+import { useSetAtom } from "jotai";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { sendMessage } = useMessage();
+
+  const sendMessages = useSetAtom(sendMessage)
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,7 +38,7 @@ const MessageInput = () => {
     if (!text.trim() && !imagePreview) return;
 
     try {
-      await sendMessage({
+      await sendMessages({
         text: text.trim(),
         image: imagePreview,
       });
