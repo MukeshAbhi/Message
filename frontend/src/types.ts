@@ -35,3 +35,11 @@ export interface ErrMsg {
     message: string;
     status: string
 }
+
+export type Message = {
+  _id: string;
+  senderId: string;
+  receiverId: string;
+  text: string;
+  createdAt: string;
+};
