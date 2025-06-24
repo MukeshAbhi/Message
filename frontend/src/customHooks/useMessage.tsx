@@ -83,7 +83,7 @@ export const useMessage = () => {
     });
 
     // Set selected user
-    const setSelectedUser = atom(null, (get, set, selected: User) => {
+    const setSelectedUser = atom(null, (get, set, selected: User | null) => {
         set(selectedUser, selected);
     }) 
 

@@ -34,3 +34,12 @@ export const apiRequest = async ({ url, token, data, method }: ApiRequestParams)
         return null;
     }
 };
+
+export function formatMessageTime(date: Date) {
+  return new Date(date).toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Kolkata",
+  });
+}
