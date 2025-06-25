@@ -2,7 +2,7 @@
 import { io, Socket } from "socket.io-client";
 import type { User } from "../types";
 
-const BASE_URL = process.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 let socket: Socket | null = null;
 
