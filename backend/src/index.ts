@@ -5,8 +5,7 @@ import 'dotenv/config';
 import errorMiddleware from "./middleware/errorMiddleware";
 import cookieParser from "cookie-parser"
 import { router } from "./routes";
-
-const app = express();
+import { io, app, server } from "./lib/socket";
 
 const port = process.env.PORT || 3001;
 
@@ -22,6 +21,6 @@ app.use("/api/v1",router);
 //error middleware
 app.use(errorMiddleware);
 
-app.listen(port,() => {
+server.listen(port,() => {
     console.log(`Server running on ${port}` )
 });

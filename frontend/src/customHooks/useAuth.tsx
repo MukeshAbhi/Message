@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAtom } from "jotai"
 import { userAtom } from "../store/userAtom"
+import { disconnectSocket } from "../utils/socket";
 
 export const useAuth = () => {
     const [ user, setUser ] = useAtom(userAtom);
@@ -12,6 +13,7 @@ export const useAuth = () => {
 
     const logout = () => {
         setUser(null);
+        disconnectSocket();
         localStorage.removeItem("user")
     }
 

@@ -4,6 +4,7 @@ import { apiRequest } from "../utils";
 import { userAtom } from "./userAtom";
 import toast from 'react-hot-toast';
 import type { Message, User } from "../types";
+import { getSocket } from "../utils/socket";
 
 // Create atoms 
 const messages = atom<Message[]>([]);
@@ -64,6 +65,24 @@ const sendMessage = atom(null, async (get, set, messageData) => {
     }
 });
 
+const subscribeToNewMessages = atom(null, async (get, set) => {
+    const selectedUserD = get(selectedUser);
+
+    if(!selectedUserD) return;
+    const socket = getSocket();
+
+    socket?.on("new-message", (message: Message) => {
+        if (message.senderId === selectedUserD._id || message.receiverId === selectedUserD._id) {
+            set(messages, (prevMessages) => [...prevMessages, message]);
+        }
+    });
+});
+
+const unsubscribeToMessages = () => {
+    const socket = getSocket();
+    socket?.off("new-message");
+};
+
 // Get all messages with a specific user
 const getMessage = atom(null, async (get, set, userId: string) => {
 
@@ -100,5 +119,7 @@ export const messageAtom = () => {
         selectedUser,
         isUsersLoading,
         isMessagesLoading,
+        subscribeToNewMessages,
+        unsubscribeToMessages
     };
 }

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Message from "../db/models/messageModel";
 import cloudinary from "../lib/cloudinary";
+import { getReceiverSocketId, io } from "../lib/socket";
 
 export const getMessages = async ( req: Request, res: Response, next: NextFunction) => {
     try{
@@ -47,7 +48,11 @@ export const sendMessage = async ( req: Request, res: Response, next: NextFuncti
 
         await newMessage.save();
 
-        // todo: realtime functionality 
+        // realtime functionality 
+        const receiverSocketId = getReceiverSocketId(userToId);
+        if(receiverSocketId) {
+            io.to(receiverSocketId).emit("new-message", newMessage);
+        }
 
         res.status(201).json(newMessage);
 

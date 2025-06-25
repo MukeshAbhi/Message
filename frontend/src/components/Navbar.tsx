@@ -4,6 +4,7 @@ import { LogOut, MessageSquare } from "lucide-react";
 
 const Navbar = () => {
   const { logout, user: authUser } = useAuth();
+  
 
   return (
     <header

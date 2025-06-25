@@ -16,6 +16,8 @@ const ChatContainer = () => {
     selectedUser,
     getMessage,
     isMessagesLoading,
+    subscribeToNewMessages,
+    unsubscribeToMessages,
   } = messageAtom();
 
   const messageList = useAtomValue(messages);
@@ -23,14 +25,19 @@ const ChatContainer = () => {
   const getMessages = useSetAtom(getMessage);
   const loading = useAtomValue(isMessagesLoading);
   const authUser = useAtomValue(userAtom);
+  const subscribeToMessages = useSetAtom(subscribeToNewMessages)
 
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (selected?._id) {
       getMessages(selected._id);
+      subscribeToMessages();
+
+      return () => unsubscribeToMessages();
+    
     }
-  }, [selected?._id, getMessages]);
+  }, [selected?._id, getMessages, subscribeToMessages, unsubscribeToMessages]);
 
   useEffect(() => {
     if (messageEndRef.current) {

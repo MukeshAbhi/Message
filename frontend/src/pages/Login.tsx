@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TextInput } from "../components/TextInput";
-import { useForm } from "react-hook-form"; 
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { CustomButton } from "../components/CustomButton";
 import { Loading } from "../components/Loading";
 import type { ErrMsg } from "../types";
 import { apiRequest } from "../utils";
 import { useAuth } from "../customHooks/useAuth";
+import { connectSocket } from "../utils/socket";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-
-    
+    const navigate = useNavigate();
     const {register, handleSubmit, formState:{ errors }} = useForm({mode: "onChange"});
 
     const [errMsg, setErrMsg] = useState<ErrMsg>({
@@ -45,9 +46,10 @@ const Login = () => {
                 setErrMsg(res);
                 const newData = { token: res.token, ...res.user };
                 login(newData);
+                connectSocket(res.user);
                 setTimeout(() => {
-                    window.location.replace("/");
-                }, 5000);
+                    navigate("/");
+                }, 2000);
             }
 
 
