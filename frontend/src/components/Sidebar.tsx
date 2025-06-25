@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { Users } from "lucide-react";
 import SidebarSkeleton from "./skeletons/Sidebarskeleton";
-
-import { useSetAtom, useAtomValue } from "jotai";
-import { useMessage } from "../customHooks/useMessage";
+import { useSetAtom, useAtomValue, useAtom } from "jotai";
+import { messageAtom } from "../store/messageAtom";
 
 const Sidebar = () => {
   const {
@@ -11,13 +10,13 @@ const Sidebar = () => {
     users,
     selectedUser,
     isUsersLoading,
-  } = useMessage();
+  } = messageAtom();
 
   const fetchUsers = useSetAtom(getUsers);
+  // friends
   const usersData = useAtomValue(users);
-  const selected = useAtomValue(selectedUser);
   const loading = useAtomValue(isUsersLoading);
-  const setSelected = useSetAtom(selectedUser);
+  const [ selected, setSelected ] = useAtom(selectedUser);
 
   useEffect(() => {
     fetchUsers();
@@ -40,7 +39,7 @@ const Sidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {usersData?.length > 0 ? (
+        {usersData?.length > 0  ? (
           usersData.map((user) => (
             <button
               type="button"

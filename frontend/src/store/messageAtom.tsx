@@ -1,11 +1,11 @@
 
 import { atom } from "jotai";
 import { apiRequest } from "../utils";
-import { userAtom } from "../store/userAtom";
+import { userAtom } from "./userAtom";
 import toast from 'react-hot-toast';
 import type { Message, User } from "../types";
 
-// Create atoms outside the hook to prevent recreation on every render
+// Create atoms 
 const messages = atom<Message[]>([]);
 const users = atom<User[]>([]);
 const selectedUser = atom<User | null>(null);
@@ -16,7 +16,7 @@ const isMessagesLoading = atom(false);
 // Fetch users the current user can chat with
 const getUsers = atom(null, async (get, set) => {
     const user = get(userAtom);
-    console.log("Fetching users with token:", user?.token);
+    
     set(isUsersLoading, true);
     try{
         const res = await apiRequest({
@@ -25,7 +25,7 @@ const getUsers = atom(null, async (get, set) => {
             method: "GET",
             data: ""
         });
-        console.log("API Response:", res);
+        
         console.log("Friends data:", res?.data);
         set(users, res?.data || []);
     } catch (err) {
@@ -41,7 +41,7 @@ const getUsers = atom(null, async (get, set) => {
 const sendMessage = atom(null, async (get, set, messageData) => {
 
     const selectedUserD = get(selectedUser);
-    const messagesD = get(messages);
+    const messagesD = Array.isArray(get(messages)) ? get(messages) : [];
     const user = get(userAtom);
 
     if (!selectedUserD?._id) return;
@@ -53,8 +53,11 @@ const sendMessage = atom(null, async (get, set, messageData) => {
             method: "POST",
             data: messageData
         });
-
-        set(messages, [...messagesD, res.data]);
+        console.log("API Response:", res);
+        // Ensure we have valid message data before adding to array
+        if (res?.data) {
+            set(messages, [...messagesD, res.data]);
+        }
     }catch (err) {
         console.log("Error in sendMessageAtom : ",err);
         toast.error('Message send failed');
@@ -70,22 +73,25 @@ const getMessage = atom(null, async (get, set, userId: string) => {
 
     try {
         const res = await apiRequest({
-            url:`message/${userId}`,
+            url:`/message/${userId}`,
             token: user?.token,
             method: "GET",
             data: ""
         });
         console.log("API Response:", res.data);
-        set(messages, res.data);
+        // Ensure we always set an array, even if res.data is undefined/null
+        set(messages, Array.isArray(res.data) ? res.data : []);
     } catch (err) {
         console.log("Error in getMessageAtom : ",err);
+        // Reset messages to empty array on error
+        set(messages, []);
         toast.error('Failed to fetch messages');
     } finally {
         set(isMessagesLoading, false);
     }
 });
 
-export const useMessage = () => {
+export const messageAtom = () => {
     return {
         getUsers,
         getMessage,

@@ -1,12 +1,12 @@
 import { X } from "lucide-react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useMessage } from "../customHooks/useMessage";
+import { messageAtom } from "../store/messageAtom";
 
 
 const ChatHeader = () => {
   const {
     selectedUser,
-  } = useMessage();
+  } = messageAtom();
 
   const selecteduser = useAtomValue(selectedUser);
   const setSelecteduser = useSetAtom(selectedUser);

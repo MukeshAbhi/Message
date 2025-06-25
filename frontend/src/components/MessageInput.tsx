@@ -1,14 +1,14 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
-import {useMessage }from "../customHooks/useMessage";
+import { messageAtom }from "../store/messageAtom";
 import { useSetAtom } from "jotai";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { sendMessage } = useMessage();
+  const { sendMessage } = messageAtom();
 
   const sendMessages = useSetAtom(sendMessage)
 

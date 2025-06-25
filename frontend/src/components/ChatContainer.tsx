@@ -7,7 +7,8 @@ import MessageSkeleton from "./skeletons/MessageSkeleton";
 
 import { formatMessageTime } from "../utils";
 import { userAtom } from "../store/userAtom";
-import { useMessage } from "../customHooks/useMessage";
+import { messageAtom } from "../store/messageAtom";
+import type { Message } from "../types";
 
 const ChatContainer = () => {
   const {
@@ -15,7 +16,7 @@ const ChatContainer = () => {
     selectedUser,
     getMessage,
     isMessagesLoading,
-  } = useMessage();
+  } = messageAtom();
 
   const messageList = useAtomValue(messages);
   const selected = useAtomValue(selectedUser);
@@ -25,10 +26,17 @@ const ChatContainer = () => {
 
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
+  console.log("messageList :", messageList);
+  console.log("messageList type:", typeof messageList);
+  console.log("messageList isArray:", Array.isArray(messageList));
+  console.log("selected user:", selected);
+  console.log("loading:", loading);
+
   useEffect(() => {
     if (selected?._id) {
       getMessages(selected._id);
     }
+    
   }, [selected?._id, getMessages]);
 
   useEffect(() => {
@@ -60,13 +68,14 @@ const ChatContainer = () => {
       <ChatHeader />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messageList.length === 0 ?(
+        {!Array.isArray(messageList) || messageList.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center">
             <p className="text-zinc-500">Start the conversation</p>
           </div>
-        )
-        :
-        (messageList.map((message) => (
+        ) : (
+          messageList
+            .filter((message): message is Message => !!message && !!message._id)
+            .map((message) => (
           <div
             key={message._id}
             className={`chat ${
