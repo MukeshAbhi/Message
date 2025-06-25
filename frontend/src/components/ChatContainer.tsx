@@ -26,17 +26,10 @@ const ChatContainer = () => {
 
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
-  console.log("messageList :", messageList);
-  console.log("messageList type:", typeof messageList);
-  console.log("messageList isArray:", Array.isArray(messageList));
-  console.log("selected user:", selected);
-  console.log("loading:", loading);
-
   useEffect(() => {
     if (selected?._id) {
       getMessages(selected._id);
     }
-    
   }, [selected?._id, getMessages]);
 
   useEffect(() => {
@@ -68,6 +61,7 @@ const ChatContainer = () => {
       <ChatHeader />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        
         {!Array.isArray(messageList) || messageList.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center">
             <p className="text-zinc-500">Start the conversation</p>

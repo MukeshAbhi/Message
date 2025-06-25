@@ -25,8 +25,8 @@ const getUsers = atom(null, async (get, set) => {
             method: "GET",
             data: ""
         });
+
         
-        console.log("Friends data:", res?.data);
         set(users, res?.data || []);
     } catch (err) {
         console.log("Error in getUserAtom : ",err);
@@ -53,10 +53,10 @@ const sendMessage = atom(null, async (get, set, messageData) => {
             method: "POST",
             data: messageData
         });
-        console.log("API Response:", res);
-        // Ensure we have valid message data before adding to array
-        if (res?.data) {
-            set(messages, [...messagesD, res.data]);
+
+        
+        if (res && res._id) {
+            set(messages, [...messagesD, res]);
         }
     }catch (err) {
         console.log("Error in sendMessageAtom : ",err);
@@ -78,9 +78,8 @@ const getMessage = atom(null, async (get, set, userId: string) => {
             method: "GET",
             data: ""
         });
-        console.log("API Response:", res.data);
-        // Ensure we always set an array, even if res.data is undefined/null
-        set(messages, Array.isArray(res.data) ? res.data : []);
+
+        set(messages, Array.isArray(res) ? res : []);
     } catch (err) {
         console.log("Error in getMessageAtom : ",err);
         // Reset messages to empty array on error
