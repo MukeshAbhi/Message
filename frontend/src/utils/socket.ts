@@ -2,7 +2,7 @@
 import { io, Socket } from "socket.io-client";
 import type { User } from "../types";
 
-const BASE_URL = "http://localhost:8081";
+const BASE_URL = process.env.VITE_BASE_URL;
 
 let socket: Socket | null = null;
 
